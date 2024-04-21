@@ -1,0 +1,3 @@
+C:/Users/patry/STM32CubeIDE/workspace_1.10.1/RadioDisplay/Debug/CMakeFiles/RadioDisplay.dir
+C:/Users/patry/STM32CubeIDE/workspace_1.10.1/RadioDisplay/Debug/CMakeFiles/edit_cache.dir
+C:/Users/patry/STM32CubeIDE/workspace_1.10.1/RadioDisplay/Debug/CMakeFiles/rebuild_cache.dir
