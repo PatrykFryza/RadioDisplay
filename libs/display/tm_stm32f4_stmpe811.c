@@ -158,18 +158,20 @@ TM_STMPE811_State_t TM_STMPE811_Init(void) {
 	/* Clear all the status pending bits if any */
 	i2c_write_byte(STMPE811_I2C, STMPE811_ADDRESS, STMPE811_INT_STA, 0xFF);
 	
-	/* Enable global interrupts */
-	/*
-	mode = TM_I2C_Read(STMPE811_I2C, STMPE811_ADDRESS, STMPE811_INT_CTRL);
-	mode |= 0x01;
-	i2c_write_byte(STMPE811_I2C, STMPE811_ADDRESS, STMPE811_INT_CTRL, mode);
-	*/
+
+
 	/* Enable touch interrupt */
-	/*
-	mode = TM_I2C_Read(STMPE811_I2C, STMPE811_ADDRESS, STMPE811_INT_EN);
+
+	mode = i2c_read_byte(STMPE811_I2C, STMPE811_ADDRESS, STMPE811_INT_EN);
 	mode |= 0x01;
 	i2c_write_byte(STMPE811_I2C, STMPE811_ADDRESS, STMPE811_INT_EN, mode);
-	*/
+
+	/* Enable global interrupts */
+
+	mode = i2c_read_byte(STMPE811_I2C, STMPE811_ADDRESS, STMPE811_INT_CTRL);
+	mode |= 0x01;
+	i2c_write_byte(STMPE811_I2C, STMPE811_ADDRESS, STMPE811_INT_CTRL, mode);
+
 	/* Wait for 2 ms delay */
 	LL_mDelay(2);
 	
@@ -183,7 +185,6 @@ uint8_t TM_STMPE811_Read(uint8_t reg) {
 
 TM_STMPE811_State_t TM_STMPE811_ReadTouch(TM_STMPE811_TouchData *structdata) {
 	uint8_t val;
-	
 	/* Save state */
 	structdata->last_pressed = structdata->pressed;
 	
@@ -292,6 +293,13 @@ uint16_t TM_STMPE811_ReadY(uint16_t y) {
 	}
 	return y;
 }	
+
+void clear_interrupt(uint8_t *flag){
+	//if interrupt
+	i2c_write_byte(STMPE811_I2C, STMPE811_ADDRESS, STMPE811_INT_STA, 0x01);
+	*flag = 0;
+	i2c_write_byte(STMPE811_I2C, STMPE811_ADDRESS, STMPE811_FIFO_STA, 0x01);
+}
 
 
 uint8_t i2c_read_byte(I2C_TypeDef* I2Cx, uint8_t slave_addr, uint8_t addr) {

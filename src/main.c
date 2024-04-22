@@ -24,6 +24,7 @@
 #include "nRF24.h"
 
 uint8_t rf_receive_flag = 0;
+uint8_t disp_touch_flag = 0;
 
 int main(void){
 	SystemClock_Config();
@@ -45,11 +46,11 @@ int main(void){
 	TM_ILI9341_DrawFilledRectangle(120, 260, 239, 319, ILI9341_COLOR_BLUE);
 
 	nRF24_Init();
-	nRF24_SetRXAddress(0, (uint8_t*)"Nad");
-	nRF24_SetTXAddress((uint8_t*)"Odb");
+//	nRF24_SetRXAddress(0, (uint8_t*)"Nad");
+//	nRF24_SetTXAddress((uint8_t*)"Odb");
 
-//	nRF24_SetRXAddress(0, (uint8_t*)"Odb");
-//	nRF24_SetTXAddress((uint8_t*)"Nad");
+	nRF24_SetRXAddress(0, (uint8_t*)"Odb");
+	nRF24_SetTXAddress((uint8_t*)"Nad");
 	nRF24_RX_Mode();
 
 
@@ -58,7 +59,8 @@ int main(void){
 	uint16_t counter = 0;
 	uint8_t line = 3;
 	while(1){
-		if (TM_STMPE811_ReadTouch(&touchData) == TM_STMPE811_State_Pressed){
+		if (disp_touch_flag){
+			TM_STMPE811_ReadTouch(&touchData);
 			if(touchData.x < 120 && touchData.y > 260){
 				TM_ILI9341_Puts(0, 10, "Sending \"Hello world\"", &TM_Font_11x18, ILI9341_COLOR_WHITE, ILI9341_COLOR_BLACK);
 				press_flag = 1;
@@ -74,6 +76,7 @@ int main(void){
 			nRF24_SendPacket(message, 11);
 			press_flag = 0;
 			LL_mDelay(300);
+			clear_interrupt(&disp_touch_flag);
 			TM_ILI9341_Puts(0, 10, "Sending \"Hello world\"", &TM_Font_11x18, ILI9341_COLOR_BLACK, ILI9341_COLOR_BLACK);
 		}
 		else if(press_flag == 2){
@@ -82,6 +85,7 @@ int main(void){
 			nRF24_SendPacket(message, length);
 			press_flag = 0;
 			LL_mDelay(300);
+			clear_interrupt(&disp_touch_flag);
 			TM_ILI9341_Puts(0, 10, "Sending \"Hello world\"", &TM_Font_11x18, ILI9341_COLOR_BLACK, ILI9341_COLOR_BLACK);
 		}
 		if(line > 22)
@@ -107,4 +111,11 @@ void EXTI0_IRQHandler(void){
 		nRF24_IRQ_Handler();
 		rf_receive_flag = 1;
 	}
+}
+
+void EXTI15_10_IRQHandler(void){
+  if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_15) != RESET){
+    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_15);
+    disp_touch_flag = 1;
+  }
 }

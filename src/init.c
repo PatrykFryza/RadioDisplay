@@ -138,4 +138,18 @@ void GPIO_init(void){
 	NVIC_SetPriority(EXTI0_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),0, 0));
 	NVIC_EnableIRQ(EXTI0_IRQn);
 
+
+	LL_SYSCFG_SetEXTISource(LL_SYSCFG_EXTI_PORTA, LL_SYSCFG_EXTI_LINE15);
+	EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_15;
+	EXTI_InitStruct.LineCommand = ENABLE;
+	EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
+	EXTI_InitStruct.Trigger = LL_EXTI_TRIGGER_FALLING;
+	LL_EXTI_Init(&EXTI_InitStruct);
+
+	LL_GPIO_SetPinPull(DISP_IRQ_GPIO_PORT, DISP_IRQ_PIN, LL_GPIO_PULL_UP);
+	LL_GPIO_SetPinMode(DISP_IRQ_GPIO_PORT, DISP_IRQ_PIN, LL_GPIO_MODE_INPUT);
+
+	NVIC_SetPriority(EXTI15_10_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),0, 0));
+	NVIC_EnableIRQ(EXTI15_10_IRQn);
+
 }

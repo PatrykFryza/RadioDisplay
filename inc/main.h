@@ -25,7 +25,8 @@
 #include "tm_stm32f4_stmpe811.h"
 #include "tm_stm32f4_timer_properties.h"
 
-
+#define DISP_IRQ_GPIO_PORT GPIOA
+#define DISP_IRQ_PIN GPIO_PIN_15
 
 #define NRF24_CSN_GPIO_PORT GPIOC
 #define NRF24_CSN_PIN GPIO_PIN_5
@@ -35,7 +36,6 @@
 
 #define NRF24_IRQ_GPIO_PORT GPIOB
 #define NRF24_IRQ_PIN GPIO_PIN_0
-
 
 #define DUMMY_BYTE ((uint8_t)0x00)
 

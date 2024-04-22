@@ -123,6 +123,7 @@ SDA        PC9         Data pin for I2C
 
 #define I2C_TIMEOUT 100;
 #define I2C_DELAY_MS(X) LL_mDelay(X);
+void clear_interrupt(uint8_t *flag);
 uint8_t i2c_read_byte(I2C_TypeDef* I2Cx, uint8_t slave_addr, uint8_t addr);
 uint8_t i2c_write_byte(I2C_TypeDef* I2Cx, uint8_t slave_addr, uint8_t addr, uint8_t data);
 uint8_t i2c_read_bytes(I2C_TypeDef* I2Cx, uint8_t slave_addr, uint8_t addr,
